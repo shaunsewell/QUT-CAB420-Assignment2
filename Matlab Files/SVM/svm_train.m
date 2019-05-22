@@ -22,7 +22,8 @@ UB = C * ones(n,1);
 X0 = zeros(n,1);
 
 warning off; % suppress 'Warning: Large-scale method ...'
-alpha = quadprog(H+1e-10*eye(n),f,A,b,Aeq,beq,LB,UB,X0)
+options = optimoptions(@quadprog,'Display','off');
+alpha = quadprog(H+1e-10*eye(n),f,A,b,Aeq,beq,LB,UB,X0, options);
 warning on;
 
 % essentially, we have added a (weak) regularization term to
@@ -39,6 +40,7 @@ beta = alpha(S).*y(S);
 XS = X(S,:);
 
 % estimate w0 robustly (bias parameter)
+
 margvecs = find((alpha > 1e-3*max(alpha)) & (alpha < C - 1e-3*max(alpha)));
 w0 = mean(y(margvecs) - sum(diag(beta)*K(S,margvecs))');
 

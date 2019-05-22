@@ -20,8 +20,8 @@ if (nargin < 5) tol=1e-6;       end;
 if (nargin < 4) nIter=100;      end;
 if (nargin < 3) cInit='random'; end;
 
-doPlot = false;
-%doPlot = true;
+%doPlot = false;
+doPlot = true;
 
 [N,D] = size(X);                             % get data size
 

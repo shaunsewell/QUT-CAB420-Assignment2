@@ -1,0 +1,547 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CAB420 Assignment 2</title><meta name="generator" content="MATLAB 9.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-05-22"><meta name="DC.source" content="Assignment2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1><b>CAB420 Assignment 2</b></h1><!--introduction--><p>Shaun Sewell</p><p>N9509623</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Part A</a></li><li><a href="#2"><b>Support Vector Machines</b></a></li><li><a href="#8"><b>Bayes Classifiers</b></a></li><li><a href="#9">Part B</a></li><li><a href="#10"><b>EigenFaces</b></a></li><li><a href="#12"><b>Clustering</b></a></li></ul></div><h2 id="1">Part A</h2><h2 id="2"><b>Support Vector Machines</b></h2><p><b>1. For the first three datasets, consider the linear, second order polynomial, and Gaussian of standard deviation 1 kernels. For each dataset provide a rationale for which kernel should be the best for training a SVM classifier on that dataset. Choose the best kernel for each dataset and plot the decision boundary and test errors with svm test.m. Hand in the three plots. (for consistency, everybody should use C = 1000).</b></p><pre class="codeinput">clear ; close <span class="string">all</span>; clc
+addpath(genpath(<span class="string">'Matlab Files'</span>));
+load(<span class="string">"data_ps3_2.mat"</span>);
+
+C = 1000;
+</pre><p>Given that the plot of the data from set 1 is visually seperable with a straight line the linear kernel should be the best performing.</p><pre class="codeinput">svm_test(@Klinear, 0, C, set1_train, set1_test);
+</pre><img vspace="5" hspace="5" src="Assignment2_01.png" alt=""> <p>Given that the plot of the data from set 2 is visually seperable with a quadratic the poly kernel of order 2 should be the best performing.</p><p>MIGHT NEED TO EXPLAIN WHY GUASSIAN WONT WORK</p><pre class="codeinput">svm_test(@Kpoly, 2, C, set2_train, set2_test);
+</pre><img vspace="5" hspace="5" src="Assignment2_02.png" alt=""> <p>With the thrid set being seperated into distinct clusters, with no obvious way for the linear or second order poly to partition them, the gaussian kernel is likely to perform the best. NEED MORE REASONING HERE</p><pre class="codeinput">svm_test(@Kgaussian, 1, C, set3_train, set3_test);
+</pre><img vspace="5" hspace="5" src="Assignment2_03.png" alt=""> <p><b>2. For the digit dataset (set4 train and set4 test), train and test SVM&#8217;s with a linear, polynomial of degree 2, and Gaussian of standard deviation 1.5 kernels. Report the test errors.</b></p><pre class="codeinput"><span class="comment">% Linear training</span>
+set4_svm_linear = svm_train(set4_train,@Klinear,0,C);
+<span class="comment">% verify</span>
+y_prediction_linear = sign(svm_discrim_func(set4_test.X,set4_svm_linear));
+errors_linear = find(y_prediction_linear ~= set4_test.y);
+fprintf(<span class="string">'Linear: %g%% of test examples were misclassified.\n'</span>,<span class="keyword">...</span>
+    length(errors_linear)/length(set4_test.y))
+
+<span class="comment">% Poly training</span>
+set4_svm_poly = svm_train(set4_train,@Kpoly,2,C);
+<span class="comment">% verify</span>
+y_prediction_poly = sign(svm_discrim_func(set4_test.X,set4_svm_poly));
+errors_poly = find(y_prediction_poly ~= set4_test.y);
+fprintf(<span class="string">'Poly: %g%% of test examples were misclassified.\n'</span>,<span class="keyword">...</span>
+    length(errors_poly)/length(set4_test.y))
+
+set4_svm_gaus = svm_train(set4_train,@Kgaussian,1.5,C);
+<span class="comment">% verify</span>
+y_prediction_gaus = sign(svm_discrim_func(set4_test.X,set4_svm_gaus));
+errors_gaus = find(y_prediction_gaus ~= set4_test.y);
+fprintf(<span class="string">'Gaussian: %g%% of test examples were misclassified.\n'</span>,<span class="keyword">...</span>
+    length(errors_gaus)/length(set4_test.y))
+</pre><pre class="codeoutput">Linear: 0.1375% of test examples were misclassified.
+Poly: 0.12% of test examples were misclassified.
+Gaussian: 0.085% of test examples were misclassified.
+</pre><h2 id="8"><b>Bayes Classifiers</b></h2><p>(a) When creating a joint Bayes classifier the probabilities you need are the probability of each x1,x2 combination occuring. An estimate of these values can be found by simply counting how many of these combinations occur with each class.</p><pre class="language-matlab">Estimated <span class="string">probability</span> <span class="string">values</span> <span class="string">from</span> <span class="string">training</span> <span class="string">data:</span>
+</pre><pre>  x1  |  x2  |  y=0  |  y=1   |   P(y=0|x1,x2)  |  P(y=1|x1,x2)
+   0  |   0  |   1   |   3    |       25%       |      75%
+   0  |   1  |   1   |   3    |       25%       |      75%
+   1  |   0  |   3   |   0    |      100%       |       0%
+   1  |   1  |   3   |   2    |       60%       |      40%</pre><pre class="language-matlab">Classifying <span class="string">the</span> <span class="string">test</span> <span class="string">set:</span>
+</pre><pre>  x1  |  x2  |   y-pred   |   y
+   0  |   1  |      1     |   1
+   1  |   0  |      0     |   1
+   1  |   1  |      0     |   0</pre><p>(b) When creating a naive Bayes classifier the probabilities you need are the probability of each class and the probability of a feature given each class</p><p>First we need the probability of each class y <img src="Assignment2_eq08733904908155435988.png" alt="$$ P(y=0) = \frac{8}{16} $$"> <img src="Assignment2_eq17644573422549736043.png" alt="$$ P(y=1) = \frac{8}{16} $$"></p><p>Next we need the probability of a feature (x1 or x2) given a class y</p><pre>      |  y=0 |  y=1
+x1=0  |  2/8 |  6/8
+x1=1  |  6/8 |  2/8
+x2=0  |  4/8 |  3/8
+x2=1  |  4/8 |  5/8</pre><p>P(x|y) needs to be calculated for each x1,x2 combination in the test set.</p><p>First test data point x1=0, x2=1, y=1</p><p><img src="Assignment2_eq07171710472914782737.png" alt="$$ P(x_1=0,x_2=1\ |\ y=0) = P(x_1=0\ |\ y=0)\cdot P(x_2=1\ |\ y=0)$$"></p><p><img src="Assignment2_eq06262187979195762194.png" alt="$$ = \left(\frac{2}{8}\right)\cdot \left(\frac{4}{8}\right) $$"></p><p><img src="Assignment2_eq01088027859849714145.png" alt="$$ = \frac{1}{8} $$"></p><p><img src="Assignment2_eq14677059908021396225.png" alt="$$ P(x_1=0,x_2=1\ |\ y=1) = P(x_1=0\ |\ y=1)\cdot P(x_2=1\ |\ y=1)$$"></p><p><img src="Assignment2_eq16087095969374269903.png" alt="$$ = \left(\frac{6}{8}\right)\cdot \left(\frac{5}{8}\right) $$"></p><p><img src="Assignment2_eq03613889617847864723.png" alt="$$ = \frac{15}{32} $$"></p><p>Second test data point x1=1, x2=0, y=1</p><p><img src="Assignment2_eq07444015647699782871.png" alt="$$ P(x_1=1,x_2=0\ |\ y=0) = P(x_1=1\ |\ y=0)\cdot P(x_2=0\ |\ y=0)$$"></p><p><img src="Assignment2_eq04869917003738548789.png" alt="$$ = \left(\frac{6}{8}\right)\cdot \left(\frac{4}{8}\right) $$"></p><p><img src="Assignment2_eq11841121126034554100.png" alt="$$ = \frac{3}{8} $$"></p><p><img src="Assignment2_eq17686190935512138196.png" alt="$$ P(x_1=1,x_2=0\ |\ y=1) = P(x_1=1\ |\ y=1)\cdot P(x_2=0\ |\ y=1)$$"></p><p><img src="Assignment2_eq10213796376653873109.png" alt="$$ = \left(\frac{2}{8}\right)\cdot \left(\frac{3}{8}\right) $$"></p><p><img src="Assignment2_eq07809309358138474515.png" alt="$$ = \frac{3}{32} $$"></p><p>Third test data point x1=1, x2=1, y=0</p><p><img src="Assignment2_eq14723171110341565027.png" alt="$$ P(x_1=1,x_2=1\ |\ y=0) = P(x_1=1\ |\ y=0)\cdot P(x_2=1\ |\ y=0)$$"></p><p><img src="Assignment2_eq04869917003738548789.png" alt="$$ = \left(\frac{6}{8}\right)\cdot \left(\frac{4}{8}\right) $$"></p><p><img src="Assignment2_eq11841121126034554100.png" alt="$$ = \frac{3}{8} $$"></p><p><img src="Assignment2_eq13996265486146265866.png" alt="$$ P(x_1=1,x_2=1\ |\ y=1) = P(x_1=1\ |\ y=1)\cdot P(x_2=1\ |\ y=1)$$"></p><p><img src="Assignment2_eq02223072781415199179.png" alt="$$ = \left(\frac{2}{8}\right)\cdot \left(\frac{5}{8}\right) $$"></p><p><img src="Assignment2_eq12671523109205246009.png" alt="$$ = \frac{5}{32} $$"></p><p>Next calculate P(x) using the formula</p><p><img src="Assignment2_eq13949362751295953089.png" alt="$$ P(x) = \sum_i P(x|y_i)\cdot P(y_i) $$"></p><p>for all feature values in the test set.</p><p><img src="Assignment2_eq07683046869187374203.png" alt="$$ P(x_1=0,x_2=1) = \left(\frac{1}{8} \cdot \frac{1}{2}\right) + \left(\frac{15}{32} \cdot \frac{1}{2}\right) $$"></p><p><img src="Assignment2_eq13594826097924396948.png" alt="$$ = \frac{19}{64} $$"></p><p><img src="Assignment2_eq16753153921285072613.png" alt="$$ P(x_1=1,x_2=0) = \left(\frac{3}{8} \cdot \frac{1}{2}\right) + \left(\frac{3}{32} \cdot \frac{1}{2}\right) $$"></p><p><img src="Assignment2_eq14181149855771462580.png" alt="$$ = \frac{15}{64} $$"></p><p><img src="Assignment2_eq13235444675352224397.png" alt="$$ P(x_1=1,x_2=1) = \left(\frac{3}{8} \cdot \frac{1}{2}\right) + \left(\frac{5}{32} \cdot \frac{1}{2}\right) $$"></p><p><img src="Assignment2_eq08200529874904421418.png" alt="$$ = \frac{17}{64} $$"></p><p>Using Bayes rule to find P(y|x1,x2)</p><p><img src="Assignment2_eq01150191551754005236.png" alt="$$ P(y|x_1,x_2) = \frac{P(x_1,x_2|y) \cdot P(y)}{P(x_1,x_2)} $$"></p><p>First test data point x1=0, x2=1</p><p><img src="Assignment2_eq13742747744883928606.png" alt="$$ P(y=0|x_1=0,x_2=1]) = \frac{P(x_1=0,x_2=1|y) \cdot P(y)}{P(x_1=0,x_2=1)} $$"></p><p><img src="Assignment2_eq05058990540658050770.png" alt="$$ = \frac{(1/8) \cdot (1/2)}{19/64} $$"></p><p><img src="Assignment2_eq16103833419505139392.png" alt="$$ \approx 21\% $$"></p><p>Therefore:</p><p><img src="Assignment2_eq14458065445030654205.png" alt="$$ P(y=1|x_1=0,x_2=1) \approx 79\% $$"></p><p>Second test data point x1=1, x2=0</p><p><img src="Assignment2_eq00406746919577027533.png" alt="$$ P(y=0|x_1=1,x_2=0) = \frac{P(x_1=1,x_2=0|y) \cdot P(y)}{P(x_1=1,x_2=0)} $$"></p><p><img src="Assignment2_eq15610801766847789451.png" alt="$$ = \frac{(3/8) \cdot (1/2)}{15/64} $$"></p><p><img src="Assignment2_eq16360476181954792000.png" alt="$$ \approx 80\% $$"></p><p>Therefore:</p><p><img src="Assignment2_eq18236357349432475761.png" alt="$$ P(y=1|x_1=1,x_2=0) \approx 20\% $$"></p><p>Third test data point x1=1, x2=1</p><p><img src="Assignment2_eq01668505501911823761.png" alt="$$ P(y=0|x_1=1,x_2=1) = \frac{P(x_1=1,x_2=1|y) \cdot P(y)}{P(x_1=1,x_2=1)} $$"></p><p><img src="Assignment2_eq08562609533734353299.png" alt="$$ = \frac{(3/8) \cdot (1/2)}{17/64} $$"></p><p><img src="Assignment2_eq01408125984531801724.png" alt="$$ \approx 71\% $$"></p><p>Therefore:</p><p><img src="Assignment2_eq01617697811718814838.png" alt="$$ P(y=1|x_1=1,x_2=1 \approx 29\% $$"></p><pre>  x1  |  x2  |  P(y=0|x)  |  P(y=1|x)  |  y-pred  |  y
+   0  |   1  |     21%    |     79%    |    1     |  1
+   1  |   0  |     80%    |     20%    |    0     |  1
+   1  |   1  |     71%    |     29%    |    0     |  0</pre><h2 id="9">Part B</h2><h2 id="10"><b>EigenFaces</b></h2><pre class="codeinput">X = load(<span class="string">'data/faces.txt'</span>); <span class="comment">% load face dataset</span>
+img = reshape(X(1,:),[24 24]); <span class="comment">% convert vectorized datum to 24x24 image patch</span>
+imagesc(img); axis <span class="string">square</span>; colormap <span class="string">gray</span>; <span class="comment">% display an image patch</span>
+title(<span class="string">'Example EigenFace'</span>)
+<span class="comment">% (a) *Subtract the mean of the face images (X0 = X - u) to make your data</span>
+<span class="comment">% zero-mean*</span>
+
+mu = mean(X);
+X0 = bsxfun(@minus, X, mu);
+sigma = std(X0);
+X0 = bsxfun(@rdivide, X0, sigma);
+
+[U, S, V] = svd(X0);
+
+W=U*S;
+
+<span class="comment">% (b) *For k = 1...10 compute the approximation to X0 using</span>
+<span class="comment">% X^0 = W(:,1:k).V(:,1:k)'. Compute the MSE in the SVD's approximation</span>
+<span class="comment">% mean(mean(X0-X^0).^2. Plot them as a function of k*</span>
+
+k = 1:10;
+mse = zeros(size(k));
+<span class="keyword">for</span> i=k
+    X0_approx = W(:, 1:i)*V(:, 1:i)';
+    mse(i) = mean(mean((X0-X0_approx).^2));
+<span class="keyword">end</span>
+
+figure();
+hold <span class="string">on</span>;
+plot(k, mse);
+title(<span class="string">'Mean Squared Error Vs K'</span>);
+xlabel(<span class="string">'K'</span>);
+ylabel(<span class="string">'MSE'</span>);
+hold <span class="string">off</span>;
+
+<span class="comment">% (c) *Display the first few principal directions of the data, by computing</span>
+<span class="comment">% mu+alpha*V(:,j)' and mu-alpha*V(:,j)' where alpha = 2*median(abs(W(:,j))*</span>
+
+positive_direction = {};
+negative_direction = {};
+<span class="keyword">for</span> j=1:3
+    alpha = 2*median(abs(W(:, j)));
+    positive_direction{j} = mu + alpha*(V(:, j)');
+    negative_direction{j} = mu - alpha*(V(:, j)');
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> p=1:3
+    img = reshape(positive_direction{p}, [24, 24]);
+    figure(<span class="string">'name'</span>, sprintf(<span class="string">'Positive Direction %d'</span>, p));
+    imagesc(img);
+    title(sprintf(<span class="string">'Positive Direction %d'</span>, p));
+    axis <span class="string">square</span>;
+    colormap <span class="string">gray</span>;
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> n=1:3
+    img = reshape(negative_direction{n}, [24, 24]);
+    figure(<span class="string">'name'</span>, sprintf(<span class="string">'Negative Direction %d'</span>, n));
+    imagesc(img);
+    title(sprintf(<span class="string">'Negative Direction %d'</span>, n))
+    axis <span class="string">square</span>;
+    colormap <span class="string">gray</span>;
+<span class="keyword">end</span>
+
+<span class="comment">% (d) *Choose a few faces at random ( say, about 15-25), and display them as</span>
+<span class="comment">% images with the coordinates given by their coeficients on the first two</span>
+<span class="comment">% principal components:*</span>
+
+idx = randi([1,4916], 1, 25);
+figure;
+hold <span class="string">on</span>;
+axis <span class="string">ij</span>;
+colormap <span class="string">gray</span>;
+range = max(W(idx, 1:2)) - min(W(idx, 1:2));
+scale = [200, 200]./range;
+<span class="keyword">for</span> i=idx
+    imagesc(W(i, 1)*scale(1),W(i, 2)*scale(2),reshape(X(i, :), 24, 24));
+<span class="keyword">end</span>
+
+<span class="comment">% (e) *Choose two faces and reconstruct them using only K principal</span>
+<span class="comment">% directions, for K = 5,10,50*</span>
+
+k_directions = [5, 10, 50];
+faces = randi([1,4916], 1, 2);
+
+<span class="keyword">for</span> f=faces
+    figure(<span class="string">'name'</span>, sprintf(<span class="string">'face %d'</span>, f));
+    imagesc(reshape(X(f,:), [24, 24]));
+    axis <span class="string">square</span>;
+    colormap <span class="string">gray</span>;
+    title(sprintf(<span class="string">'face %d'</span>, f));
+
+    <span class="keyword">for</span> i=1:length(k_directions)
+        figure(<span class="string">'name'</span>, sprintf(<span class="string">'face %d reconstructed with %d pcs'</span>, f, k_directions(i)));
+        imagesc(reshape(W(f, 1:k_directions(i))*V(1:576, 1:k_directions(i))', 24, 24));
+        axis <span class="string">square</span>;
+        colormap <span class="string">gray</span>;
+        title(sprintf(<span class="string">'face %d reconstructed with %d pcs'</span>, f, k_directions(i)));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Assignment2_04.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_05.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_06.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_07.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_08.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_09.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_10.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_11.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_12.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_13.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_14.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_15.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_16.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_17.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_18.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_19.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_20.png" alt=""> <h2 id="12"><b>Clustering</b></h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% *CAB420 Assignment 2*
+% Shaun Sewell
+%
+% N9509623
+
+%% Part A
+%%% *Support Vector Machines*
+% *1. For the first three datasets, consider the linear, second order
+% polynomial, and Gaussian of standard deviation 1 kernels. For each
+% dataset provide a rationale for which kernel should be the best for
+% training a SVM classifier on that dataset. Choose the best kernel for each
+% dataset and plot the decision boundary and test errors with svm test.m.
+% Hand in the three plots. (for consistency, everybody should use C =
+% 1000).*
+
+clear ; close all; clc
+addpath(genpath('Matlab Files'));
+load("data_ps3_2.mat");
+
+C = 1000;
+%%
+% Given that the plot of the data from set 1 is visually seperable with a
+% straight line the linear kernel should be the best performing.
+
+svm_test(@Klinear, 0, C, set1_train, set1_test);
+
+%%
+% Given that the plot of the data from set 2 is visually seperable with a
+% quadratic the poly kernel of order 2 should be the best performing.
+%
+% MIGHT NEED TO EXPLAIN WHY GUASSIAN WONT WORK
+
+svm_test(@Kpoly, 2, C, set2_train, set2_test);
+
+
+%%
+% With the thrid set being seperated into distinct clusters, with no
+% obvious way for the linear or second order poly to partition them, the
+% gaussian kernel is likely to perform the best.
+% NEED MORE REASONING HERE
+
+svm_test(@Kgaussian, 1, C, set3_train, set3_test);
+
+%%
+% *2. For the digit dataset (set4 train and set4 test), train and test
+% SVM’s with a linear, polynomial of degree 2, and Gaussian of standard
+% deviation 1.5 kernels. Report the test errors.*
+
+% Linear training
+set4_svm_linear = svm_train(set4_train,@Klinear,0,C);
+% verify 
+y_prediction_linear = sign(svm_discrim_func(set4_test.X,set4_svm_linear));
+errors_linear = find(y_prediction_linear ~= set4_test.y);
+fprintf('Linear: %g%% of test examples were misclassified.\n',... 
+    length(errors_linear)/length(set4_test.y))
+
+% Poly training
+set4_svm_poly = svm_train(set4_train,@Kpoly,2,C);
+% verify 
+y_prediction_poly = sign(svm_discrim_func(set4_test.X,set4_svm_poly));
+errors_poly = find(y_prediction_poly ~= set4_test.y);
+fprintf('Poly: %g%% of test examples were misclassified.\n',... 
+    length(errors_poly)/length(set4_test.y))
+
+set4_svm_gaus = svm_train(set4_train,@Kgaussian,1.5,C);
+% verify 
+y_prediction_gaus = sign(svm_discrim_func(set4_test.X,set4_svm_gaus));
+errors_gaus = find(y_prediction_gaus ~= set4_test.y);
+fprintf('Gaussian: %g%% of test examples were misclassified.\n',... 
+    length(errors_gaus)/length(set4_test.y))
+
+%%
+%%% *Bayes Classifiers*
+% (a) When creating a joint Bayes classifier the probabilities you need are
+% the probability of each x1,x2 combination occuring. An estimate of these
+% values can be found by simply counting how many of these combinations
+% occur with each class.
+% 
+%   Estimated probability values from training data:
+%
+%    x1  |  x2  |  y=0  |  y=1   |   P(y=0|x1,x2)  |  P(y=1|x1,x2)
+%     0  |   0  |   1   |   3    |       25%       |      75%   
+%     0  |   1  |   1   |   3    |       25%       |      75%   
+%     1  |   0  |   3   |   0    |      100%       |       0%   
+%     1  |   1  |   3   |   2    |       60%       |      40%   
+% 
+%   Classifying the test set:
+%   
+%    x1  |  x2  |   y-pred   |   y      
+%     0  |   1  |      1     |   1      
+%     1  |   0  |      0     |   1       
+%     1  |   1  |      0     |   0       
+%         
+%
+% (b) When creating a naive Bayes classifier the probabilities you need are
+% the probability of each class and the probability of a feature given each
+% class
+%
+% First we need the probability of each class y
+% $$ P(y=0) = \frac{8}{16} $$
+% $$ P(y=1) = \frac{8}{16} $$
+%
+% Next we need the probability of a feature (x1 or x2) given a class y
+%
+%        |  y=0 |  y=1     
+%  x1=0  |  2/8 |  6/8  
+%  x1=1  |  6/8 |  2/8  
+%  x2=0  |  4/8 |  3/8  
+%  x2=1  |  4/8 |  5/8  
+% 
+% P(x|y) needs to be calculated for each x1,x2 combination in the test set.
+% 
+% First test data point x1=0, x2=1, y=1
+% 
+% $$ P(x_1=0,x_2=1\ |\ y=0) = P(x_1=0\ |\ y=0)\cdot P(x_2=1\ |\ y=0)$$
+%
+% $$ = \left(\frac{2}{8}\right)\cdot \left(\frac{4}{8}\right) $$
+%
+% $$ = \frac{1}{8} $$
+%
+% $$ P(x_1=0,x_2=1\ |\ y=1) = P(x_1=0\ |\ y=1)\cdot P(x_2=1\ |\ y=1)$$
+%
+% $$ = \left(\frac{6}{8}\right)\cdot \left(\frac{5}{8}\right) $$
+%
+% $$ = \frac{15}{32} $$
+%
+% Second test data point x1=1, x2=0, y=1
+% 
+% $$ P(x_1=1,x_2=0\ |\ y=0) = P(x_1=1\ |\ y=0)\cdot P(x_2=0\ |\ y=0)$$
+%
+% $$ = \left(\frac{6}{8}\right)\cdot \left(\frac{4}{8}\right) $$
+%
+% $$ = \frac{3}{8} $$
+%
+% $$ P(x_1=1,x_2=0\ |\ y=1) = P(x_1=1\ |\ y=1)\cdot P(x_2=0\ |\ y=1)$$
+%
+% $$ = \left(\frac{2}{8}\right)\cdot \left(\frac{3}{8}\right) $$
+%
+% $$ = \frac{3}{32} $$
+%
+% Third test data point x1=1, x2=1, y=0
+% 
+% $$ P(x_1=1,x_2=1\ |\ y=0) = P(x_1=1\ |\ y=0)\cdot P(x_2=1\ |\ y=0)$$
+%
+% $$ = \left(\frac{6}{8}\right)\cdot \left(\frac{4}{8}\right) $$
+%
+% $$ = \frac{3}{8} $$
+%
+% $$ P(x_1=1,x_2=1\ |\ y=1) = P(x_1=1\ |\ y=1)\cdot P(x_2=1\ |\ y=1)$$
+%
+% $$ = \left(\frac{2}{8}\right)\cdot \left(\frac{5}{8}\right) $$
+%
+% $$ = \frac{5}{32} $$
+% 
+% 
+% Next calculate P(x) using the formula 
+%
+% $$ P(x) = \sum_i P(x|y_i)\cdot P(y_i) $$
+%
+% for all feature values in the test set. 
+%
+% $$ P(x_1=0,x_2=1) = \left(\frac{1}{8} \cdot \frac{1}{2}\right) + \left(\frac{15}{32} \cdot \frac{1}{2}\right) $$
+%
+% $$ = \frac{19}{64} $$
+% 
+% $$ P(x_1=1,x_2=0) = \left(\frac{3}{8} \cdot \frac{1}{2}\right) + \left(\frac{3}{32} \cdot \frac{1}{2}\right) $$
+% 
+% $$ = \frac{15}{64} $$
+%
+% $$ P(x_1=1,x_2=1) = \left(\frac{3}{8} \cdot \frac{1}{2}\right) + \left(\frac{5}{32} \cdot \frac{1}{2}\right) $$
+%
+% $$ = \frac{17}{64} $$
+% 
+%
+% Using Bayes rule to find P(y|x1,x2)
+% 
+% $$ P(y|x_1,x_2) = \frac{P(x_1,x_2|y) \cdot P(y)}{P(x_1,x_2)} $$
+%
+% First test data point x1=0, x2=1
+%
+% $$ P(y=0|x_1=0,x_2=1]) = \frac{P(x_1=0,x_2=1|y) \cdot P(y)}{P(x_1=0,x_2=1)} $$
+% 
+% $$ = \frac{(1/8) \cdot (1/2)}{19/64} $$
+%
+% $$ \approx 21\% $$
+%
+% Therefore:
+%
+% $$ P(y=1|x_1=0,x_2=1) \approx 79\% $$
+%
+% Second test data point x1=1, x2=0
+% 
+% $$ P(y=0|x_1=1,x_2=0) = \frac{P(x_1=1,x_2=0|y) \cdot P(y)}{P(x_1=1,x_2=0)} $$
+% 
+% $$ = \frac{(3/8) \cdot (1/2)}{15/64} $$
+%
+% $$ \approx 80\% $$
+%
+% Therefore:
+%
+% $$ P(y=1|x_1=1,x_2=0) \approx 20\% $$
+%
+% Third test data point x1=1, x2=1
+% 
+% $$ P(y=0|x_1=1,x_2=1) = \frac{P(x_1=1,x_2=1|y) \cdot P(y)}{P(x_1=1,x_2=1)} $$
+% 
+% $$ = \frac{(3/8) \cdot (1/2)}{17/64} $$
+%
+% $$ \approx 71\% $$
+%
+% Therefore:
+%
+% $$ P(y=1|x_1=1,x_2=1 \approx 29\% $$
+%
+% 
+%    x1  |  x2  |  P(y=0|x)  |  P(y=1|x)  |  y-pred  |  y
+%     0  |   1  |     21%    |     79%    |    1     |  1
+%     1  |   0  |     80%    |     20%    |    0     |  1
+%     1  |   1  |     71%    |     29%    |    0     |  0
+%
+
+%% Part B
+%%% *EigenFaces*
+X = load('data/faces.txt'); % load face dataset
+img = reshape(X(1,:),[24 24]); % convert vectorized datum to 24x24 image patch
+imagesc(img); axis square; colormap gray; % display an image patch
+title('Example EigenFace')
+% (a) *Subtract the mean of the face images (X0 = X - u) to make your data
+% zero-mean*
+
+mu = mean(X);
+X0 = bsxfun(@minus, X, mu);
+sigma = std(X0);
+X0 = bsxfun(@rdivide, X0, sigma);
+
+[U, S, V] = svd(X0);
+
+W=U*S;
+
+% (b) *For k = 1...10 compute the approximation to X0 using 
+% X^0 = W(:,1:k).V(:,1:k)'. Compute the MSE in the SVD's approximation
+% mean(mean(X0-X^0).^2. Plot them as a function of k*
+
+k = 1:10;
+mse = zeros(size(k));
+for i=k
+    X0_approx = W(:, 1:i)*V(:, 1:i)';
+    mse(i) = mean(mean((X0-X0_approx).^2));
+end
+
+figure();
+hold on;
+plot(k, mse);
+title('Mean Squared Error Vs K');
+xlabel('K');
+ylabel('MSE');
+hold off;
+
+% (c) *Display the first few principal directions of the data, by computing
+% mu+alpha*V(:,j)' and mu-alpha*V(:,j)' where alpha = 2*median(abs(W(:,j))*
+
+positive_direction = {};
+negative_direction = {};
+for j=1:3
+    alpha = 2*median(abs(W(:, j)));
+    positive_direction{j} = mu + alpha*(V(:, j)');
+    negative_direction{j} = mu - alpha*(V(:, j)');
+end
+
+for p=1:3
+    img = reshape(positive_direction{p}, [24, 24]);
+    figure('name', sprintf('Positive Direction %d', p));
+    imagesc(img);
+    title(sprintf('Positive Direction %d', p));
+    axis square;
+    colormap gray;
+end
+
+for n=1:3
+    img = reshape(negative_direction{n}, [24, 24]);
+    figure('name', sprintf('Negative Direction %d', n));
+    imagesc(img);
+    title(sprintf('Negative Direction %d', n))
+    axis square;
+    colormap gray;
+end
+
+% (d) *Choose a few faces at random ( say, about 15-25), and display them as
+% images with the coordinates given by their coeficients on the first two
+% principal components:*
+
+idx = randi([1,4916], 1, 25);
+figure;
+hold on; 
+axis ij; 
+colormap gray;
+range = max(W(idx, 1:2)) - min(W(idx, 1:2));
+scale = [200, 200]./range;
+for i=idx
+    imagesc(W(i, 1)*scale(1),W(i, 2)*scale(2),reshape(X(i, :), 24, 24)); 
+end
+
+% (e) *Choose two faces and reconstruct them using only K principal
+% directions, for K = 5,10,50*
+
+k_directions = [5, 10, 50];
+faces = randi([1,4916], 1, 2);
+
+for f=faces
+    figure('name', sprintf('face %d', f));
+    imagesc(reshape(X(f,:), [24, 24]));
+    axis square;
+    colormap gray;
+    title(sprintf('face %d', f));
+    
+    for i=1:length(k_directions) 
+        figure('name', sprintf('face %d reconstructed with %d pcs', f, k_directions(i)));
+        imagesc(reshape(W(f, 1:k_directions(i))*V(1:576, 1:k_directions(i))', 24, 24));
+        axis square;
+        colormap gray;
+        title(sprintf('face %d reconstructed with %d pcs', f, k_directions(i)));
+    end
+end
+
+%%
+%%% *Clustering*
+##### SOURCE END #####
+--></body></html>
